@@ -24,7 +24,7 @@ const PaymentReturn = () => {
           setVerificationStatus('Error: Some booking details are missing. Please try again or contact support.');
           return;
         }
-        const res = await fetch('https://hotel-booking-api-p8if.onrender.com/payment/verify', {
+        const res = await fetch('https://hotel-booking-api-p8if.onrender.com/api/payment/verify', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
