@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
@@ -49,7 +48,7 @@ const Payment = () => {
 
         
         const response = await axios.post(
-          'http://localhost:3000/api/payment/initiate',
+          'https://hotel-booking-api-p8if.onrender.com/api/payment/initiate',
           paymentPayload,
           {
             headers: {

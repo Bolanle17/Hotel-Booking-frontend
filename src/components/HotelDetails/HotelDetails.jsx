@@ -63,7 +63,7 @@ const HotelDetails = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
         <div>
           <img
-            src={`http://localhost:3000/${hotel.img}`}
+            src={`https://hotel-booking-api-p8if.onrender.com/${hotel.img}`}
             alt={hotel.name}
             className="w-full h-48 md:h-64 lg:h-96 object-cover rounded-lg shadow-lg mb-4"
           />
@@ -71,7 +71,7 @@ const HotelDetails = () => {
             {hotel.gallery?.map((img) => (
               <img
                 key={img} 
-                src={`http://localhost:3000/${img}`}
+                src={`https://hotel-booking-api-p8if.onrender.com/${img}`}
                 alt={`${hotel.name} Gallery`}
                 className="w-full h-24 md:h-32 object-cover rounded shadow"
               />
@@ -107,7 +107,7 @@ const HotelDetails = () => {
               >
                 {room.image ? (
                   <img
-                    src={`http://localhost:3000/${room.image}`}
+                    src={`https://hotel-booking-api-p8if.onrender.com/${room.image}`}
                     alt={room.roomType}
                     className="w-full h-32 sm:h-48 object-cover"
                   />

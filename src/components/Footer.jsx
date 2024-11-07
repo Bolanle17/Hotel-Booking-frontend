@@ -1,6 +1,5 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFacebook, faInstagram, faTwitter, faYoutube } from "@fortawesome/free-brands-svg-icons/faFacebook";
+import { FaFacebook, FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 function Footer() {
@@ -32,10 +31,10 @@ function Footer() {
           <div>
             <h3 className="text-xl font-bold mb-4">Follow Us</h3>
             <div className="flex space-x-4">
-              <a href="#" className="hover:text-gray-400"><FontAwesomeIcon icon={faFacebook} size="lg" /></a>
-              <a href="#" className="hover:text-gray-400"><FontAwesomeIcon icon={faInstagram} size="lg" /></a>
-              <a href="#" className="hover:text-gray-400"><FontAwesomeIcon icon={faTwitter} size="lg" /></a>
-              <a href="#" className="hover:text-gray-400"><FontAwesomeIcon icon={faYoutube} size="lg" /></a>
+              <a href="#" className="hover:text-gray-400"><FaFacebook size={24} /></a>
+              <a href="#" className="hover:text-gray-400"><FaInstagram size={24} /></a>
+              <a href="#" className="hover:text-gray-400"><FaTwitter size={24} /></a>
+              <a href="#" className="hover:text-gray-400"><FaYoutube size={24} /></a>
             </div>
           </div>
         </div>

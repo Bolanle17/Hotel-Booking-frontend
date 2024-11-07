@@ -16,7 +16,7 @@ const ThankYou = () => {
 
   useEffect(() => {
     const verifyPayment = async () => {
-      
+
       try {
         const params = new URLSearchParams(location.search);
         const transaction_id = params.get('transaction_id');
@@ -49,7 +49,7 @@ const ThankYou = () => {
         }
     
         const response = await axios.post(
-          'http://localhost:3000/api/payment/verify',
+          'https://hotel-booking-api-p8if.onrender.com/api/payment/verify',
           { 
             transaction_id,
             tx_ref,

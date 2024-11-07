@@ -26,7 +26,7 @@ export const useDraftBooking = () => {
   const transferDraftBookingToServer = async (userId) => {
     if (draftBooking) {
       try {
-        const response = await fetch("http://localhost:3000/api/booking", {
+        const response = await fetch("https://hotel-booking-api-p8if.onrender.com/booking", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

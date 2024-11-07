@@ -103,7 +103,7 @@ export const EcomProvider = ({ children }) => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch("http://localhost:3000/api/hotel");
+      const response = await fetch("https://hotel-booking-api-p8if.onrender.com/hotel");
       if (!response.ok) {
        throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -131,7 +131,7 @@ export const EcomProvider = ({ children }) => {
   const getHotelById = async(id)=>{
 
     try {
-        const response = await axios.get(`http://localhost:3000/api/hotel/${id}`);
+        const response = await axios.get(`https://hotel-booking-api-p8if.onrender.com/hotel/${id}`);
         const result = await response.data;
         if (result.success) {
           return result.data;
@@ -164,7 +164,7 @@ export const EcomProvider = ({ children }) => {
     setError(null); 
   
     try {
-      const response = await fetch("http://localhost:3000/api/room");
+      const response = await fetch("https://hotel-booking-api-p8if.onrender.com/room");
   
      
       console.log("Room API response:", response);
@@ -221,7 +221,7 @@ const bookNow = async (bookingDetails) => {
 
 
   try {
-      const response = await fetch("http://localhost:3000/api/booking", {
+      const response = await fetch("https://hotel-booking-api-p8if.onrender.com/booking", {
           method: "POST",
           headers: {
               "Content-Type": "application/json",
@@ -266,7 +266,7 @@ const bookNow = async (bookingDetails) => {
   const getUserProfile = async () => {
     try {
       const token = authTokenStorage.getItem(); 
-      const response = await axios.get("http://localhost:3000/api/profile/view", {
+      const response = await axios.get("https://hotel-booking-api-p8if.onrender.com/profile/view", {
         headers: { "auth-token": token }
       });
       setUserProfile(response.data.profile);
@@ -284,14 +284,14 @@ const bookNow = async (bookingDetails) => {
   
       let response;
       if (profileData instanceof FormData) {
-        response = await axios.post("http://localhost:3000/api/profile/update", profileData, {
+        response = await axios.post("https://hotel-booking-api-p8if.onrender.com/profile/update", profileData, {
           headers: {
             "auth-token": token,
             "Content-Type": "multipart/form-data"
           }
         });
       } else {
-        response = await axios.post("http://localhost:3000/api/profile/update", profileData, {
+        response = await axios.post("https://hotel-booking-api-p8if.onrender.com/profile/update", profileData, {
           headers: { "auth-token": token }
         });
       }

@@ -21,7 +21,6 @@ function Profile() {
     if (userProfile) {
       setProfileData({
         UserName: userProfile.UserName || '',
-        // lastName: userProfile.lastName || '',
         email: userProfile.email || '',
         phone: userProfile.phone || '',
         address: userProfile.address || '',

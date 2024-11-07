@@ -27,11 +27,11 @@ const Header = () => {
     if (!imgPath || imgPath === 'uploads/avater.png') {
       return {avater}; 
     }
-    const baseUrl = 'http://localhost:3000';
+    const baseUrl = 'https://hotel-booking-api-p8if.onrender.com';
     return `${baseUrl}${imgPath}`;
   };
 
-  const userImage = userProfile?.image ? `http://localhost:3000/uploads/${userProfile.image}` : avater;
+  const userImage = userProfile?.image ? `https://hotel-booking-api-p8if.onrender.com/uploads/${userProfile.image}` : avater;
 
 
   const handleProfileUpdate = async(profileData) =>{
