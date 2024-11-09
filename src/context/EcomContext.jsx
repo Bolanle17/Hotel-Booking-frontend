@@ -205,7 +205,7 @@ const bookNow = async (bookingDetails) => {
   console.log("Booking details being sent:", bookingDetails); 
 
   if (!userId || !token) {
-      throw new Error("User is not authenticated or missing token.");
+      throw new Error("User is not authenticated or missing token.")
   }
 
   const requestBody = {
