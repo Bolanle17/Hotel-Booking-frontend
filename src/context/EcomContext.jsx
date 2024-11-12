@@ -205,7 +205,7 @@ const bookNow = async (bookingDetails) => {
   console.log("Booking details being sent:", bookingDetails); 
 
   if (!userId || !token) {
-      throw new Error("User is not authenticated or missing token.")
+      throw new Error("User is not authenticated or missing token.");
   }
 
   const requestBody = {
@@ -214,10 +214,6 @@ const bookNow = async (bookingDetails) => {
       userId: userID, 
       rooms: Array.isArray(bookingDetails.rooms) ? bookingDetails.rooms : [],
   };
-
-  console.log("Final Request Body:", requestBody); 
-  console.log("Final Request Body22:", JSON.stringify(requestBody, null, 2));
-  console.log("Requesting booking with body:", JSON.stringify(requestBody, null, 2));
 
 
   try {

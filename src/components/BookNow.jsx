@@ -115,7 +115,8 @@ const BookNow = () => {
       }
     } catch (error) {
       console.error('Error during booking process:', error);
-      showNotification("error", "Error occurred while booking. Please try again.");
+      showNotification("error", "Please Login to continue your booking.");
+      navigate('/login');
     }
   };
 

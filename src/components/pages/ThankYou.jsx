@@ -16,7 +16,7 @@ const ThankYou = () => {
 
   useEffect(() => {
     const verifyPayment = async () => {
-
+      
       try {
         const params = new URLSearchParams(location.search);
         const transaction_id = params.get('transaction_id');
@@ -104,51 +104,11 @@ const ThankYou = () => {
     return <Navigate to="/" />;
   }
 
-  if (verificationStatus === 'pending') {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold mb-4">Verifying your payment...</h2>
-          <p className="text-gray-600">Please wait while we confirm your transaction.</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (verificationStatus === 'failed') {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg">
-          <h2 className="text-xl font-semibold mb-4 text-red-600">Payment Verification Failed</h2>
-          <p className="text-gray-600 mb-4">{error}</p>
-          <p className="text-sm text-gray-500 mb-4">
-            If you believe this is an error, please take a screenshot of this page 
-            and contact our support team with your transaction details.
-          </p>
-          <div className="space-y-2">
-            <button 
-              onClick={() => navigate('/booking')} 
-              className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-            >
-              Try Booking Again
-            </button>
-            <Link
-              to="/contact"
-              className="block w-full px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
-            >
-              Contact Support
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <div className="max-w-md w-full mx-4 bg-white rounded-lg shadow-lg p-8">
         <div className="text-center">
-          <h1 className="text-3xl font-bold mb-4 text-green-600">Thank You!</h1>
+          <h1 className="text-3xl font-bold mb-4 text-cyan-600">Thank You!</h1>
           <p className="mb-4">
             We appreciate your business and hope you enjoy your stay with the choice of your selected hotel.
           </p>
@@ -171,7 +131,7 @@ const ThankYou = () => {
           </p>
           <Link
             to="/"
-            className="inline-block px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            className="inline-block px-6 py-2 bg-cyan-600 text-white rounded hover:bg-cyan-800"
           >
             Return to Home
           </Link>

@@ -18,7 +18,7 @@ const PaymentFailed = () => {
             <div className="mt-4 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
               <button
                 onClick={handleTryAgain}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full sm:w-auto"
+                className="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded w-full sm:w-auto"
               >
                 Try Again
               </button>
