@@ -27,7 +27,7 @@ const SignUp = () => {
     }
   
     try {
-      const res = await fetch("https://hotel-booking-api-p8if.onrender.com/api/user/register", {
+      const res = await fetch("http://localhost:3000/api/user/register", {
         method: "POST",
         body: formData,
       });

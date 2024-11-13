@@ -25,7 +25,7 @@ const HomePage = () => {
   const fetchHotels = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get("https://hotel-booking-api-p8if.onrender.com/api/hotel");
+      const response = await axios.get("http://localhost:3000/api/hotel");
       setHotelList(response.data.data);
     } catch (error) {
       console.error("Error fetching hotels:", error);
@@ -103,7 +103,7 @@ const HomePage = () => {
                 onClick={() => handleHotelClick(item._id)}
               >
                 <img
-                  src={`https://hotel-booking-api-p8if.onrender.com/${item.img}`}
+                  src={`http://localhost:3000/${item.img}`}
                   alt={item.name}
                   className="w-full h-48 sm:h-56 lg:h-64 object-cover"
                 />

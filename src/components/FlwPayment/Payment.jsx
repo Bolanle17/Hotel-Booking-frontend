@@ -48,7 +48,7 @@ const Payment = () => {
 
         
         const response = await axios.post(
-          'https://hotel-booking-api-p8if.onrender.com/api/payment/initiate',
+          'http://localhost:3000/api/payment/initiate',
           paymentPayload,
           {
             headers: {

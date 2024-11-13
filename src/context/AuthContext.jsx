@@ -70,7 +70,7 @@ export const AuthProvider = ({ children }) => {
     const token = getAuthToken();
     if (token) {
       try {
-        const response = await fetch("https://hotel-booking-api-p8if.onrender.com/api/user/user", {
+        const response = await fetch("http://localhost:3000/api/user/user", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

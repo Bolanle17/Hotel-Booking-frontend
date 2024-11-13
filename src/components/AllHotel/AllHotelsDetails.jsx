@@ -45,7 +45,7 @@ const AllHotelsDetails = () => {
                 {hotel.img ? (
                   <>
                     <img 
-                      src={`https://hotel-booking-api-p8if.onrender.com/${hotel.img}`} 
+                      src={`http://localhost:3000/${hotel.img}`} 
                       alt={hotel.name} 
                       className="w-full h-48 md:h-64 lg:h-96 object-cover rounded-lg shadow-lg mb-4" 
                     />
@@ -53,7 +53,7 @@ const AllHotelsDetails = () => {
                       {hotel.gallery && hotel.gallery.map((img, index) => (
                         <img 
                           key={`hotel-${hotel._id}-img-${index}`} 
-                          src={`https://hotel-booking-api-p8if.onrender.com/${img}`} 
+                          src={`http://localhost:3000/${img}`} 
                           alt={`${hotel.name} ${index + 1}`} 
                           className="w-full h-24 md:h-32 object-cover rounded shadow" 
                         />
@@ -93,7 +93,7 @@ const AllHotelsDetails = () => {
                     >
                       {room.image ? (
                         <img 
-                          src={`https://hotel-booking-api-p8if.onrender.com/${room.image}`} 
+                          src={`http://localhost:3000/${room.image}`} 
                           alt={room.roomType} 
                           className="w-full h-32 sm:h-48 object-cover rounded mb-4" 
                         />

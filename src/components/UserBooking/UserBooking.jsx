@@ -12,7 +12,7 @@ function UserBooking() {
   
   const fetchRoomDetails = async (id, token) => {
     try {
-      const response = await axios.get(`https://hotel-booking-api-p8if.onrender.com/api/room/${id}`, {
+      const response = await axios.get(`http://localhost:3000/api/room/${id}`, {
         headers: { 'auth-token': token }
       });
       return response.data.data; 
@@ -36,7 +36,7 @@ function UserBooking() {
           throw new Error('No authentication token found');
         }
 
-        const response = await axios.get('https://hotel-booking-api-p8if.onrender.com/api/booking/bookings', {
+        const response = await axios.get('http://localhost:3000/api/booking/bookings', {
           headers: { 'auth-token': token },
         });
 

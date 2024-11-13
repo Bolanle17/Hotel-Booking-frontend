@@ -16,7 +16,7 @@ const HotelListing = () => {
           <div key={hotel._id} className="bg-white shadow-lg rounded-lg overflow-hidden transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-xl">
             <Link to={`/details/${hotel._id}`}>
               <img
-                src={`https://hotel-booking-api-p8if.onrender.com/${hotel.img}`}
+                src={`http://localhost:3000/${hotel.img}`}
                 alt={hotel.name}
                 className="w-full h-48 sm:h-56 lg:h-64 object-cover"
               />

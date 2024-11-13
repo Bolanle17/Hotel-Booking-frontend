@@ -16,7 +16,7 @@ let DefaultIcon = L.icon({
 L.Marker.prototype.options.icon = DefaultIcon;
 
 const FALLBACK_POSITION = [6.5244, 3.3792];
-const API_BASE_URL = 'https://hotel-booking-api-p8if.onrender.com';
+const API_BASE_URL = 'http://localhost:3000';
 
 const HotelMap = ({ hotel }) => {
   const [position, setPosition] = useState(FALLBACK_POSITION);

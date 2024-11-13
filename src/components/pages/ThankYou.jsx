@@ -49,7 +49,7 @@ const ThankYou = () => {
         }
     
         const response = await axios.post(
-          'https://hotel-booking-api-p8if.onrender.com/api/payment/verify',
+          'http://localhost:3000/api/payment/verify',
           { 
             transaction_id,
             tx_ref,
