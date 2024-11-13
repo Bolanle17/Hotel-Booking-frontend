@@ -17,11 +17,19 @@ const SignUp = () => {
 
   const registerHandler = async (e) => {
     e.preventDefault();
+    const trimmedPassword = password.trim();
+    const trimmedConfirmPassword = confirmPassword.trim();
+
+    if (trimmedPassword !== trimmedConfirmPassword) {
+      showNotification("error", "Passwords do not match.");
+      return;
+    }
+
     const formData = new FormData();
     formData.append('name', name);
     formData.append('email', email);
-    formData.append('password', password);
-    formData.append('confirmPassword', confirmPassword);
+    formData.append('password', trimmedPassword);
+    formData.append('confirmPassword', trimmedConfirmPassword);
     if (image) {
       formData.append('image', image);
     }
