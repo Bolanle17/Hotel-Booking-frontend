@@ -107,7 +107,7 @@ const HotelDetails = () => {
               >
                 {room.image ? (
                   <img
-                    src={`http://localhost:3000/${room.image}`}
+                    src={`https://hotel-booking-api-p8if.onrender.com/${room.image}`}
                     alt={room.roomType}
                     className="w-full h-32 sm:h-48 object-cover"
                   />

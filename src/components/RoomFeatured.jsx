@@ -11,7 +11,7 @@ const RoomFeatured = ({ room, hotelName, onClose }) => {
           <button onClick={onClose} className="text-2xl hover:text-gray-700 transition-colors">&times;</button>
         </div>
         <img
-          src={`http://localhost:3000/${room.image}`}
+          src={`https://hotel-booking-api-p8if.onrender.com/${room.image}`}
           alt={room.roomType}
           className="w-full h-48 sm:h-64 object-cover mb-4 rounded"
         />

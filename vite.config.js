@@ -6,7 +6,7 @@ export default defineConfig(({ mode }) => ({
   server: mode === 'development' ? {
     proxy: {
       '/api': {
-        target: 'http://localhost:3000',
+        target: 'https://hotel-booking-api-p8if.onrender.com',
         changeOrigin: true,
         secure: false,
       },

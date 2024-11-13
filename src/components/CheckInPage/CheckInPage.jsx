@@ -200,7 +200,7 @@ const CheckInPage = () => {
             <h2 className="text-xl sm:text-2xl font-semibold text-gray-700 mb-2">{selectedRoom.roomType}</h2>
             {selectedRoom.image && (
               <img 
-                src={`http://localhost:3000/${selectedRoom.image}`} 
+                src={`https://hotel-booking-api-p8if.onrender.com/${selectedRoom.image}`} 
                 alt={selectedRoom.roomType} 
                 className="w-full h-48 sm:h-64 object-cover rounded-md mb-4 shadow-md" 
               />
