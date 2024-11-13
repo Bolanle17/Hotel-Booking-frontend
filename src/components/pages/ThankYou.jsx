@@ -104,6 +104,7 @@ const ThankYou = () => {
     return <Navigate to="/" />;
   }
 
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <div className="max-w-md w-full mx-4 bg-white rounded-lg shadow-lg p-8">
