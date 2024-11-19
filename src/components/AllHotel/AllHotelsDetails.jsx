@@ -39,7 +39,7 @@ const AllHotelsDetails = () => {
       return;
     }
 
-    const roomAvailability = await fetch("/api/booking/check-room-availability", {
+    const roomAvailability = await fetch("https://hotel-booking-api-p8if.onrender.com/api/booking/check-room-availability", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
