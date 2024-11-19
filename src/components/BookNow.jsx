@@ -82,44 +82,88 @@ const BookNow = () => {
     }));
   };
 
+  
+
   const handleBooking = async (e) => {
     e.preventDefault();
     
+    if (!userID) {
+      showNotification("error", "Please login to continue your booking.");
+      navigate('/login');
+      return;
+    }
+  
+    if (!selectedRooms || selectedRooms.length === 0) {
+      showNotification("error", "Please select at least one room");
+      return;
+    }
+  
+    
     const bookingDetailsWithAmount = {
       ...bookingDetails,
-      totalAmount,
+      totalAmount: totalAmount || 0,
       userId: userID,
+      currency: 'NGN',
+      rooms: selectedRooms.map(room => ({
+        _id: room._id,
+        roomType: room.roomType,
+        numberOfRooms: 1,
+        roomName: room.roomType,
+        hotel: room.hotel || selectedRooms[0]?.hotel
+      })),
+      hotel: selectedRooms[0]?.hotel,
+      hotelId: selectedRooms[0]?.hotel,
+      bookingStatus: 'PENDING'
     };
-
+  
     try {
+      
+      if (!bookingDetailsWithAmount.Name?.trim()) throw new Error("Name is required");
+      if (!bookingDetailsWithAmount.email?.trim()) throw new Error("Email is required");
+      if (!bookingDetailsWithAmount.phone?.trim()) throw new Error("Phone number is required");
+      if (!bookingDetailsWithAmount.address?.trim()) throw new Error("Address is required");
+      if (!bookingDetailsWithAmount.checkInDate || !bookingDetailsWithAmount.checkOutDate) {
+        throw new Error("Please select check-in and check-out dates");
+      }
+      if (!bookingDetailsWithAmount.hotel) throw new Error("Hotel information is missing");
+  
       const bookingResponse = await bookNow(bookingDetailsWithAmount);
-
-      console.log("bookingNow", bookingResponse)
-      if (bookingResponse) {
-        const fullBookingData = {
-          ...bookingDetailsWithAmount,
-          ...bookingResponse,
+  
+      if (bookingResponse?.booking) {
+        const paymentPayload = {
+          bookingId: bookingResponse.booking.bookingId,
+          userId: userID,
+          amount: totalAmount,
+          currency: 'NGN',
+          transactionId: bookingResponse.booking.transactionId,
+          Name: bookingDetails.Name,
+          phone: bookingDetails.phone,
+          address: bookingDetails.address,
+          guests: bookingDetails.guests,
+          checkInDate: bookingDetails.checkInDate,
+          checkOutDate: bookingDetails.checkOutDate,
+          rooms: selectedRooms,
+          email: bookingDetails.email,
+          hotelId: selectedRooms[0]?.hotel
         };
-
-        if (!fullBookingData.bookingId || !fullBookingData.userId) {
-          throw new Error("Missing bookingId or userId in the booking data.");
-        }
-
-        
+  
         localStorage.removeItem('bookingFormData');
-        
         showNotification("success", "Booking successful!");
-        navigate("/payment", { state: { bookingData: fullBookingData } });
+        navigate("/payment", { 
+          state: { 
+            bookingData: bookingResponse.booking,
+            paymentPayload 
+          } 
+        });
       } else {
-        showNotification("error", "Booking failed. Please try again later.");
+        throw new Error("Booking failed. Please try again later.");
       }
     } catch (error) {
       console.error('Error during booking process:', error);
-      showNotification("error", "Please Login to continue your booking.");
-      navigate('/login');
+      showNotification("error", error.message || "An error occurred during booking.");
     }
   };
-
+  
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Book Now</h1>
@@ -228,15 +272,15 @@ const BookNow = () => {
           <h3 className="text-xl font-bold mb-2">Selected Rooms:</h3>
           {selectedRooms && selectedRooms.length > 0 ? (
             selectedRooms.map((room, index) => (
-              <div key={index} className="mb-2">
-                <p>{room.roomType}</p>
+              <div key={room._id || index} className="mb-2 p-4 border rounded">
+                <h3 className="font-semibold">Room {index + 1}: {room.roomType}</h3>
+                {room.hotel && <p className="text-gray-600">Hotel: {room.hotel}</p>}
               </div>
             ))
           ) : (
-            <p>No rooms selected</p>
+            <p className="text-red-500">No rooms selected</p>
           )}
         </div>
-
         
         <div className="mb-6">
           <p className="text-xl font-bold">Total Amount: ₦{totalAmount}</p>
@@ -256,4 +300,4 @@ const BookNow = () => {
   );
 };
 
-export default BookNow;
+export default BookNow;

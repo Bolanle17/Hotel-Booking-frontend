@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { useEcom } from '../../context/EcomContext';
-import useLocalStorage from '../../hooks/useLocalStorage';
 import useAuth from '../../hooks/useAuth';
 
 const Payment = () => {
@@ -11,8 +10,7 @@ const Payment = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   const { setCurrentBooking } = useEcom();
-  const { getAuthToken } = useAuth();
-  const { getItem } = useLocalStorage('tempBookingDetails');
+  const { getAuthToken, user } = useAuth();
 
   useEffect(() => {
     const initiatePayment = async (bookingData) => {
@@ -26,13 +24,10 @@ const Payment = () => {
         }
 
         
-        console.log('Using auth token:', token);
-
-        
         const paymentPayload = {
-          userId: bookingData.userId,
-          bookingId: bookingData.bookingId,
-          amount: bookingData.totalAmount,
+          userId: bookingData.user || bookingData.userId,
+          bookingId: bookingData._id || bookingData.bookingId,
+          amount: bookingData.amount || bookingData.totalAmount,
           currency: 'NGN',
           email: bookingData.email,
           phone: bookingData.phone,
@@ -41,34 +36,49 @@ const Payment = () => {
           guests: bookingData.guests,
           checkInDate: bookingData.checkInDate,
           checkOutDate: bookingData.checkOutDate,
-          rooms: bookingData.rooms || []
+          rooms: bookingData.rooms.map(room => ({
+            numberOfRooms: room.numberOfRooms || 1,
+            roomId: room._id,
+            roomType: room.roomType,
+            roomName: room.roomName
+          })),
+          hotelId: bookingData.hotel 
         };
 
-        console.log("Sending payment payload:", paymentPayload);
-
         
+        const requiredFields = [
+          'bookingId',
+          'userId',
+          'amount',
+          'Name',
+          'phone',
+          'email',
+          'hotelId'
+        ];
+        
+        const missingFields = requiredFields.filter(field => !paymentPayload[field]);
+        
+        if (missingFields.length > 0) {
+          throw new Error(`Missing required fields: ${missingFields.join(', ')}`);
+        }
+
         const response = await axios.post(
           'https://hotel-booking-api-p8if.onrender.com/api/payment/initiate',
           paymentPayload,
           {
             headers: {
-              'auth-token': token,  
+              'auth-token': token,
               'Content-Type': 'application/json'
             }
           }
         );
 
-        console.log('Payment API response:', response.data);
-
         if (response.data.status === "success" && response.data.data?.link) {
-          console.log('Redirecting to payment page:', response.data.data.link);
           
           localStorage.setItem('currentBooking', JSON.stringify(bookingData));
-          
-          
           window.location.href = response.data.data.link;
         } else {
-          throw new Error(response.data.msg || 'Failed to initiate payment');
+          throw new Error(response.data.message || response.data.msg || 'Failed to initiate payment');
         }
 
       } catch (error) {
@@ -77,24 +87,29 @@ const Payment = () => {
           setError('Your session has expired. Please login again.');
           setTimeout(() => navigate('/login'), 2000);
         } else {
-          setError(error.response?.data?.message || error.message || 'An error occurred while initiating the payment');
+          setError(
+            error.response?.data?.message || 
+            error.message || 
+            'An error occurred while initiating the payment'
+          );
         }
       } finally {
         setLoading(false);
       }
     };
 
-    const handleBookingData = () => {
+    const handleBookingData = async () => {
       const bookingData = location.state?.bookingData;
 
       if (!bookingData) {
         setError('No booking data found');
         setLoading(false);
+        navigate('/');
         return;
       }
 
       console.log('Processing booking:', bookingData);
-      initiatePayment(bookingData);
+      await initiatePayment(bookingData);
     };
 
     handleBookingData();

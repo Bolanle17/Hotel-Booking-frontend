@@ -4,7 +4,7 @@ import { useEcom } from "../../context/EcomContext";
 import useAuth from "../../hooks/useAuth";
 
 const CheckInPage = () => {
-  const { setSearchCriteria, setTotalAmount, addToSelectedRooms, setSelectedRooms } = useEcom();
+  const { setSearchCriteria, setTotalAmount, addToSelectedRooms, setSelectedRooms, showNotification } = useEcom();
   const navigate = useNavigate();
   const location = useLocation();
   
@@ -155,6 +155,24 @@ const CheckInPage = () => {
     setName(user?.name || "");
     setEmail(user?.email || "");
   };
+   
+  const handleCheckOutDateChange = (e) => {
+    const newCheckOutDate = e.target.value;
+    if (!checkInDate) return;
+
+    const checkIn = new Date(checkInDate);
+    const checkOut = new Date(newCheckOutDate);
+
+    
+    if (checkOut < checkIn && checkOut.getMonth() === checkIn.getMonth()) {
+      showNotification("error", "Checkout date cannot be earlier than check-in date within the same month.");
+      return;
+    }
+
+    
+    setCheckOutDate(newCheckOutDate);
+  };
+
 
   return (
     <div className="p-4 sm:p-6 lg:p-12 bg-gray-100 min-h-screen">
@@ -226,7 +244,7 @@ const CheckInPage = () => {
             id="checkOutDate"
             name="checkOutDate"
             value={checkOutDate}
-            onChange={(e) => setCheckOutDate(e.target.value)}
+            onChange={handleCheckOutDateChange}    
             className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-cyan-500"
           />
         </div>

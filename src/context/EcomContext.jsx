@@ -2,7 +2,16 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { hotels as initialHotels } from "../Data/HotelData";
 import useAuth  from "../hooks/useAuth";
 import { useDraftBooking } from "../hooks/useDraftBooking";
-import axios from 'axios'
+import { 
+  generateBookingId, 
+  validateBookingDetails, 
+  formatBookingPayload,
+  formatPaymentPayload 
+} from '../utils/bookingUtils';
+import axios from 'axios';
+
+
+
 const EcomContext = createContext();
 
 export const useEcom = () => useContext(EcomContext);
@@ -178,7 +187,8 @@ export const EcomProvider = ({ children }) => {
       
   
       if (result.success) {
-        setRooms(result);
+       setRooms(result);
+       
         console.log("Rooms set successfully:", result); 
       } else {
         console.error("Failed to fetch rooms:", result?.message);
@@ -190,67 +200,128 @@ export const EcomProvider = ({ children }) => {
     } finally {
       setIsLoading(false); 
     }
+  }; 
+
+  // Check room availability
+  const checkRoomAvailability = async (rooms, checkInDate, checkOutDate) => {
+    try {
+      const response = await axios.post(
+        "https://hotel-booking-api-p8if.onrender.com/api/booking/check-room-availability",
+        { rooms, checkInDate, checkOutDate },
+        { headers: { "auth-token": authTokenStorage.getItem() } }
+      );
+      return response.data.success;
+    } catch (error) {
+      console.error("Error checking room availability:", error);
+      return false;
+    }
+  };
+
+
+  const generateTransactionId = () => {
+    
+    const timestamp = Date.now();
+    const random = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+    return `TXN-${timestamp}-${random}`;
+  };
+  
+  const bookNow = async (bookingDetails) => {
+     const token = authTokenStorage.getItem();
+     const userId = userID;
+  
+    if (!userId || typeof userId !== 'string') {
+      throw new Error("User ID must be a valid string.");
+    }
+  
+    try {
+      
+      const transactionId = `TXN-${Date.now()}-${Math.floor(Math.random() * 1000000).toString().padStart(6, '0')}`;
+  
+      
+      const hotelResponse = await fetch(`https://hotel-booking-api-p8if.onrender.com/api/hotel/name/${encodeURIComponent(bookingDetails.hotel)}`, {
+        headers: {
+          "auth-token": token
+        }
+      });
+      
+      const hotelData = await hotelResponse.json();
+      if (!hotelData.success || !hotelData.data._id) {
+        throw new Error("Could not find hotel ID");
+      }
+  
+      
+      const bookingPayload = {
+        ...bookingDetails,
+        hotelId: hotelData.data._id,
+        transactionId: transactionId, 
+        bookingStatus: 'PENDING',
+        userId: userId, 
+        rooms: bookingDetails.rooms.map(room => ({
+          _id: room._id,
+          roomType: room.roomType,
+          numberOfRooms: room.numberOfRooms || 1,
+          roomName: room.roomType,
+          hotel: hotelData.data._id
+        }))
+      };
+  
+      
+      console.log('Booking payload:', JSON.stringify(bookingPayload, null, 2));
+  
+      const response = await fetch("https://hotel-booking-api-p8if.onrender.com/api/booking", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "auth-token": token
+        },
+        body: JSON.stringify(bookingPayload)
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to create booking");
+      }
+  
+      const responseData = await response.json();
+      
+      if (!responseData.success) {
+        throw new Error(responseData.message || "Failed to create booking");
+      }
+  
+      
+      setCurrentBooking({
+        ...responseData.booking,
+        bookingId: responseData.booking.bookingId,
+        transactionId: transactionId
+      });
+      
+      return {
+        success: true,
+        booking: {
+          ...responseData.booking,
+          transactionId: transactionId
+        }
+      };
+    } catch (error) {
+      console.error("Error creating booking:", error);
+      throw error;
+    }
   };
   
 
 
-
-const bookNow = async (bookingDetails) => {
-  const token = authTokenStorage.getItem(); 
-  const userId = userID;
-
-  console.log("User object from useAuth is:", userId);
-  console.log("User ID:", userId, token); 
-  console.log("Current User ID:", userId); 
-  console.log("Booking details being sent:", bookingDetails); 
-
-  if (!userId || !token) {
-      throw new Error("User is not authenticated or missing token.");
-  }
-
-  const requestBody = {
-      ...bookingDetails,
-      totalAmount,
-      userId: userID, 
-      rooms: Array.isArray(bookingDetails.rooms) ? bookingDetails.rooms : [],
-  };
-
-
-  try {
-      const response = await fetch("https://hotel-booking-api-p8if.onrender.com/api/booking", {
-          method: "POST",
-          headers: {
-              "Content-Type": "application/json",
-              "auth-token": token  
-          },
-          body: JSON.stringify(requestBody),
-      });
-
-      const responseData = await response.json();
-      console.log("Booking API response data:", responseData); 
-
-      if (!response.ok) {
-          throw new Error(responseData.message || "Failed to create booking");
-      }
-
-      setCurrentBooking(responseData.booking); 
-      return responseData.booking;
-  } catch (error) {
-      console.error("Error creating booking:", error);
-      showNotification("error", `Failed to create booking: ${error.message}`);
-      return null;
-  }
+const showNotification = (type, message) => {
+  setNotification({ type, message });
+  setTimeout(() => setNotification(null), 5000); 
 };
 
 
- 
-   const showNotification = (type, message) => {
-    setNotification({ type, message });
-    setTimeout(() => setNotification(null), 5000); 
-  };
 
+  
   const addToSelectedRooms = (room) => {
-    setSelectedRooms([room]);
+    setSelectedRooms((prev) => {
+      return [...prev, room];
+    });
   };
 
   const removeFromSelectedRooms = (roomId) => {
@@ -347,4 +418,4 @@ const bookNow = async (bookingDetails) => {
   );
 };
 
-export default EcomProvider;
+export default EcomProvider;
