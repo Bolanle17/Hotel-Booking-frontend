@@ -9,7 +9,7 @@ const HotelDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { state } = useContext(AuthContext);
-  const { allHotels, getHotelById, fetchRooms, rooms } = useEcom();
+  const { allHotels, getHotelById, fetchRooms, rooms, showNotification } = useEcom();
   
   const [hotel, setHotel] = useState(null);
   const [filteredRooms, setFilteredRooms] = useState([]);
@@ -54,7 +54,7 @@ const HotelDetails = () => {
   //////////////////
   const handleCheckAvailability = async (rooms) => {
     if (!checkInDate || !checkOutDate) {
-      alert("Please select check-in and check-out dates");
+      showNotification("Please select check-in and check-out dates");
       return;
     }
 
@@ -62,6 +62,7 @@ const HotelDetails = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "auth-token": token
       },
       body: JSON.stringify({
         rooms,

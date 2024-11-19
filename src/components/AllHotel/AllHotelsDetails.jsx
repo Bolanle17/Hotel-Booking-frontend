@@ -6,7 +6,7 @@ import RoomFeatured from "../RoomFeatured";
 import HotelMap from "../HotelMap";
  
 const AllHotelsDetails = () => {
-  const { allHotels } = useEcom();
+  const { allHotels, showNotification} = useEcom();
   const navigate = useNavigate();
   const { state } = useContext(AuthContext);
   const location = useLocation();
@@ -35,7 +35,7 @@ const AllHotelsDetails = () => {
 
   const handleCheckAvailability = async (rooms) => {
     if (!checkInDate || !checkOutDate) {
-      alert("Please select check-in and check-out dates");
+      showNotification("Please select check-in and check-out dates");
       return;
     }
 
@@ -43,6 +43,7 @@ const AllHotelsDetails = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "auth-token": token
       },
       body: JSON.stringify({
         rooms,
