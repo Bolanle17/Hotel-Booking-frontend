@@ -43,7 +43,7 @@ const AllHotelsDetails = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "auth-token": token
+       'Authorization': `Bearer ${user.token}`, 
       },
       body: JSON.stringify({
         rooms,
