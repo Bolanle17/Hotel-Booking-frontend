@@ -12,6 +12,8 @@ const AllHotelsDetails = () => {
   const location = useLocation();
   const [filteredHotels, setFilteredHotels] = useState(allHotels);
   const [selectedRoom, setSelectedRoom] = useState(null);
+  const [checkInDate, setCheckInDate] = useState("");
+  const [checkOutDate, setCheckOutDate] = useState("");
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -28,14 +30,65 @@ const AllHotelsDetails = () => {
       setFilteredHotels(allHotels);
     }
   }, [location.search, allHotels]);
+   
+  /////////////////
 
-  const handleBookNow = (hotel, room) => {
-    navigate("/checkin", { state: { roomType: { ...room, hotel: hotel.name } } });
+  const handleCheckAvailability = async (rooms) => {
+    if (!checkInDate || !checkOutDate) {
+      alert("Please select check-in and check-out dates");
+      return;
+    }
+
+    const roomAvailability = await fetch("/api/booking/check-room-availability", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        rooms,
+        checkInDate,
+        checkOutDate,
+      }),
+    });
+
+    const result = await roomAvailability.json();
+
+    if (result.success) {
+      return true;
+    } else {
+      alert(result.message);
+      return false;
+    }
+  };
+
+
+  const handleBookNow = async (hotel, room) => {
+    const available = await handleCheckAvailability([room]); /////
+    if (available) {
+      navigate("/checkin", { state: { roomType: { ...room, hotel: hotel.name } } });
+    }
   };
 
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-8 text-center">All Hotels and Rooms</h1>
+        
+       
+      <div className="flex justify-between mb-6">
+        <input
+          type="date"
+          value={checkInDate}
+          onChange={(e) => setCheckInDate(e.target.value)}
+          className="px-4 py-2 border border-gray-300 rounded"
+        />
+        <input
+          type="date"
+          value={checkOutDate}
+          onChange={(e) => setCheckOutDate(e.target.value)}
+          className="px-4 py-2 border border-gray-300 rounded"
+        />
+      </div>
+
       {filteredHotels.length > 0 ? (
         filteredHotels.map((hotel) => (
           <div key={hotel._id} className="mb-16">

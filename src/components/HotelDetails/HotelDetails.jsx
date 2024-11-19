@@ -14,6 +14,8 @@ const HotelDetails = () => {
   const [hotel, setHotel] = useState(null);
   const [filteredRooms, setFilteredRooms] = useState([]);
   const [selectedRoom, setSelectedRoom] = useState(null);
+  const [checkInDate, setCheckInDate] = useState("");
+  const [checkOutDate, setCheckOutDate] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null); 
 
@@ -48,8 +50,42 @@ const HotelDetails = () => {
     }
   }, [rooms, hotel]);
 
-  const handleBookNow = (room) => {
-    navigate("/checkin", { state: { roomType: { ...room, hotel: hotel.name } } });
+
+  //////////////////
+  const handleCheckAvailability = async (rooms) => {
+    if (!checkInDate || !checkOutDate) {
+      alert("Please select check-in and check-out dates");
+      return;
+    }
+
+    const roomAvailability = await fetch("/api/booking/check-room-availability", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        rooms,
+        checkInDate,
+        checkOutDate,
+      }),
+    });
+
+    const result = await roomAvailability.json();
+
+    if (result.success) {
+      return true;
+    } else {
+      alert(result.message);
+      return false;
+    }
+  };
+
+
+  const handleBookNow = async (room) => {
+    const available = await handleCheckAvailability([room]);
+    if (available) {
+      navigate("/checkin", { state: { roomType: { ...room, hotel: hotel.name } } });
+    }
   };
 
   
@@ -60,6 +96,23 @@ const HotelDetails = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-8 text-center">{hotel.name}</h2>
+       
+      <div className="flex justify-between mb-6">
+        <input
+          type="date"
+          value={checkInDate}
+          onChange={(e) => setCheckInDate(e.target.value)}
+          className="px-4 py-2 border border-gray-300 rounded"
+        />
+        <input
+          type="date"
+          value={checkOutDate}
+          onChange={(e) => setCheckOutDate(e.target.value)}
+          className="px-4 py-2 border border-gray-300 rounded"
+        />
+      </div>
+
+      
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
         <div>
           <img
