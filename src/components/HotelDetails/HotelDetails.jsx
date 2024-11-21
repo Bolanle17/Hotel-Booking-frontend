@@ -51,37 +51,6 @@ const HotelDetails = () => {
   }, [rooms, hotel]);
 
 
-  //////////////////
-  const handleCheckAvailability = async (rooms) => {
-    if (!checkInDate || !checkOutDate) {
-      showNotification("Please select check-in and check-out dates");
-      return;
-    }
-
-    const roomAvailability = await fetch("https://hotel-booking-api-p8if.onrender.com/api/booking/check-room-availability", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        'Authorization': `Bearer ${user.token}`, 
-      },
-      body: JSON.stringify({
-        rooms,
-        checkInDate,
-        checkOutDate,
-      }),
-    });
-
-    const result = await roomAvailability.json();
-
-    if (result.success) {
-      return true;
-    } else {
-      alert(result.message);
-      return false;
-    }
-  };
-
-
   const handleBookNow = async (room) => {
     const available = await handleCheckAvailability([room]);
     if (available) {
